@@ -83,12 +83,12 @@ uploadArchives {
                 name 'Role Permissions Spring Boot Starter'
                 packaging 'jar'
                 description 'Role to Permission mapping for Spring Boot'
-                url 'https://github.com/savantly-net/spring-permission-management'
+                url 'https://github.com/savantly-net/spring-role-permissions'
 
                 scm {
-                    connection 'scm:git:git://github.com/savantly-net/spring-permission-management.git'
-                        developerConnection 'scm:git:ssh://github.com/savantly-net/spring-permission-management.git'
-                        url 'http://github.com/savantly-net/spring-permission-management/tree/master'
+                    connection 'scm:git:git://github.com/savantly-net/spring-role-permissions.git'
+                        developerConnection 'scm:git:ssh://github.com/savantly-net/spring-role-permissions.git'
+                        url 'http://github.com/savantly-net/spring-role-permissions/tree/master'
                 }
 
                 licenses {
