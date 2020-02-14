@@ -1,0 +1,89 @@
+buildscript {
+     repositories {
+         jcenter()
+     }
+     dependencies {
+         classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
+     }
+ }
+ 
+plugins {
+	id 'org.springframework.boot' version '2.2.4.RELEASE' apply false
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+	id 'java-library'
+}
+
+apply plugin: 'com.bmuschko.nexus'
+
+group = 'net.savantly'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+signing {
+	required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+    useGpgCmd()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+	
+	testImplementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation 'org.springframework.security:spring-security-test',
+		'com.h2database:h2'
+}
+
+test {
+	useJUnitPlatform()
+}
+
+dependencyManagement {
+	imports {
+		mavenBom org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
+	}
+}
+
+ modifyPom {
+     project {
+         inceptionYear '2020'
+            description 'Role to Permission mapping for Spring Boot'
+            name 'Role Permission Spring Boot Starter'
+            url 'https://github.com/savantly-net/spring-permission-management'
+            organization {
+                name 'net.savantly'
+                url 'https://github.com/savantly-net/'
+            }
+            issueManagement {
+                system 'GitHub'
+                url 'https://github.com/savantly-net/spring-permission-management/issues'
+            }
+            licenses {
+                license {
+                    name 'Apache License 2.0'
+                    url 'https://github.com/savantly-net/spring-permission-management/blob/master/LICENSE'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                url 'https://github.com/savantly-net/spring-permission-management'
+                connection 'scm:git:git://github.com/savantly-net/spring-permission-management.git'
+                developerConnection 'scm:git:ssh://git@github.com:savantly-net/spring-permission-management.git'
+            }
+            developers {
+                developer {
+                    name 'Jeremy Branham'
+                }
+            }
+     }
+ }
