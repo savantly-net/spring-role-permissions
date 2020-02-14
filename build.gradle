@@ -1,22 +1,14 @@
-buildscript {
-     repositories {
-         jcenter()
-     }
-     dependencies {
-         classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
-     }
- }
- 
 plugins {
 	id 'org.springframework.boot' version '2.2.4.RELEASE' apply false
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
 	id 'java-library'
+	id 'signing'
+	id 'maven'
 }
 
-apply plugin: 'com.bmuschko.nexus'
-
-group = 'net.savantly'
+group = 'net.savantly.security'
+archivesBaseName = "spring-role-permissions"
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
@@ -25,10 +17,25 @@ repositories {
 }
 
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+ext.ossrhUsername = project.hasProperty('ossrhUsername') ? project.ossrhUsername : ''
+ext.ossrhPassword = project.hasProperty('ossrhPassword') ? project.ossrhPassword : ''
+
+// Add Javadoc JAR and sources JAR to artifact
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+artifacts {
+    archives javadocJar, sourcesJar
+}
 
 signing {
 	required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
-    useGpgCmd()
+    //useGpgCmd()
 }
 
 dependencies {
@@ -54,36 +61,52 @@ dependencyManagement {
 	}
 }
 
- modifyPom {
-     project {
-         inceptionYear '2020'
-            description 'Role to Permission mapping for Spring Boot'
-            name 'Role Permission Spring Boot Starter'
-            url 'https://github.com/savantly-net/spring-permission-management'
-            organization {
-                name 'net.savantly'
-                url 'https://github.com/savantly-net/'
+
+// Build, sign, and upload
+uploadArchives {
+    repositories {
+        mavenDeployer {
+
+            // Sign POM
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            // Destination
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
             }
-            issueManagement {
-                system 'GitHub'
-                url 'https://github.com/savantly-net/spring-permission-management/issues'
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
             }
-            licenses {
-                license {
-                    name 'Apache License 2.0'
-                    url 'https://github.com/savantly-net/spring-permission-management/blob/master/LICENSE'
-                    distribution 'repo'
-                }
-            }
-            scm {
+
+            // Add required metadata to POM
+            pom.project {
+                name 'Role Permissions Spring Boot Starter'
+                packaging 'jar'
+                description 'Role to Permission mapping for Spring Boot'
                 url 'https://github.com/savantly-net/spring-permission-management'
-                connection 'scm:git:git://github.com/savantly-net/spring-permission-management.git'
-                developerConnection 'scm:git:ssh://git@github.com:savantly-net/spring-permission-management.git'
-            }
-            developers {
-                developer {
-                    name 'Jeremy Branham'
+
+                scm {
+                    connection 'scm:git:git://github.com/savantly-net/spring-permission-management.git'
+                        developerConnection 'scm:git:ssh://github.com/savantly-net/spring-permission-management.git'
+                        url 'http://github.com/savantly-net/spring-permission-management/tree/master'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        name 'Jeremy Branham'
+                        email 'Jeremy@Savantly.net'
+                        organization 'net.savantly'
+                        organizationUrl 'https://github.com/savantly-net/'
+                    }
                 }
             }
-     }
- }
+        }
+    }
+}

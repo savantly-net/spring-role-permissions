@@ -1,6 +1,6 @@
-# spring-permission-management
+# spring-role-permissions
 
-A Spring Security starter library for easy Role to Permission relationships.  
+A Spring Boot library for easy Role to Permission relationships.  
 
 
 ### Quickstart  
