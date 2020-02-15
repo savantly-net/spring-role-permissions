@@ -47,7 +47,7 @@ public class MyApplication {
     return new WebSecurityConfigurerAdapter() {
 			
       @Override
-	  protected void configure(HttpSecurity http) throws Exception {
+      protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().antMatchers("/secure/**").authenticated()
 		.and().oauth2ResourceServer(oauth2ResourceServer ->
 			oauth2ResourceServer
@@ -55,8 +55,8 @@ public class MyApplication {
 			    jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
 			  })
 	 	);
-	  }
-	};
+      }
+    };
   }
 }
 ```
