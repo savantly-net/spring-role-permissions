@@ -82,7 +82,7 @@ When an `Authentication` object is injected in the current security session, it 
 This library provides 2 built-in integration points for Spring Security.  
 When the integration point is reached, the `PermissionProvider` is called to get the effective permissions for each role the user is a member of.  The distinct list of permissions are added as `GrantedAuthority` items in the `Authentication` object.  
 
-You may also implement a custom `PermissionProvider` to provide a mapping of roles to permissions to Spring Security. For example, if you'd like to store your permissions in memory, or a configuration file, you just need to implement the [PermissionProvider](./src/main/java/net/savantly/authorization/service/PermissionProvider) interface, and setup one of the integration methods.
+You may also implement a custom `PermissionProvider` to provide a mapping of roles to permissions to Spring Security. For example, if you'd like to store your permissions in memory, or a configuration file, you just need to implement the [PermissionProvider](./src/main/java/net/savantly/authorization/service/PermissionProvider.java) interface, and setup one of the integration methods.
 
 
 #### Example OAuth/JWT Configuration -  
