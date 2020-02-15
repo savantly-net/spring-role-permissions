@@ -54,10 +54,10 @@ public class MyApplication {
 			  .jwt(jwt -> {
 			    jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
 			  })
-	 		);
-		  }
-	  };
-    }
+	 	);
+	  }
+	};
+  }
 }
 ```
 
