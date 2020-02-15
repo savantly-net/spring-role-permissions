@@ -25,6 +25,42 @@ Maven
 
 Add the `@EnableRolePermissions` annotation on a Spring Configuaration class to automatically create `JdbcPermissionProvider` and `RolePermissionsRepository` beans.  
 
+Example - 
+
+```java
+@SpringBootApplication
+@EnableRolePermissions
+@EnableGlobalMethodSecurity(
+  prePostEnabled = true, 
+  securedEnabled = true, 
+  jsr250Enabled = true)
+public class MyApplication {
+	
+  @Bean
+  public PermissionAwareJwtAuthenticationConverter jwtAuthenticationConverter(PermissionProvider permissionProvider) {
+    return new PermissionAwareJwtAuthenticationConverter(permissionProvider);
+  }
+
+  @Bean
+  public WebSecurityConfigurerAdapter webSecurity(PermissionAwareJwtAuthenticationConverter jwtAuthenticationConverter) {
+		
+    return new WebSecurityConfigurerAdapter() {
+			
+      @Override
+	  protected void configure(HttpSecurity http) throws Exception {
+		http.authorizeRequests().antMatchers("/secure/**").authenticated()
+		.and().oauth2ResourceServer(oauth2ResourceServer ->
+			oauth2ResourceServer
+			  .jwt(jwt -> {
+			    jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
+			  })
+	 		);
+		  }
+	  };
+    }
+}
+```
+
 Add Role to Permission mappings using the `RolePermissionsRepository`  
 
 ```java
