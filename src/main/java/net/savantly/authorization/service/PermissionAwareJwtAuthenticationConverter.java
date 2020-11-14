@@ -58,7 +58,25 @@ public class PermissionAwareJwtAuthenticationConverter extends JwtAuthentication
 
 	@SuppressWarnings("unchecked")
     private Collection<String> getRolesFromClaims(Map<String, Object> claims) {
-        return (Collection<String>) claims.getOrDefault(groupsClaim, new ArrayList<>());
+		if (groupsClaim.contains(".")) {
+			String[] pathParts = groupsClaim.split("\\.");
+			try {
+			return getNestedValue(claims, pathParts);
+			} catch (Exception e) {
+				throw new RuntimeException("failed to extract roles using groupsClaim value: " + groupsClaim, e);
+			}
+		} else {
+			return (Collection<String>) claims.getOrDefault(groupsClaim, new ArrayList<>());
+		}
     }
 	
+	private static <T> T getNestedValue(Map map, String... keys) {
+	    Object value = map;
+
+	    for (String key : keys) {
+	        value = ((Map) value).get(key);
+	    }
+
+	    return (T) value;
+	}
 }

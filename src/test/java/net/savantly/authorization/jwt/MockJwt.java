@@ -1,7 +1,9 @@
 package net.savantly.authorization.jwt;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -57,6 +59,11 @@ public class MockJwt {
 	}
     
     public String createJWT(String username, List<String> groups, List<String> scopes) {
+    	
+    	// to test nested group access
+    	Map<String, List<String>> nested = new HashMap<>();
+    	nested.put("groups", groups);
+    	
     	// Prepare JWT with claims set
     	JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
     	    .subject(username)
@@ -66,6 +73,7 @@ public class MockJwt {
     	    .claim("groups", groups)
     	    .claim("scp", scopes)
     	    .claim("preferred_username", username)
+    	    .claim("nested", nested)
     	    .build();
 
     	SignedJWT signedJWT = new SignedJWT(

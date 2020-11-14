@@ -5,7 +5,12 @@ plugins {
 	id 'java-library'
 	id 'signing'
 	id 'maven'
+  id 'jacoco'
+  id 'org.sonarqube' version "2.8"
+	id "org.owasp.dependencycheck" version "5.3.1"
 }
+
+apply from: './gradle/sonar.gradle'
 
 group = 'net.savantly.security'
 archivesBaseName = "spring-role-permissions"
@@ -43,7 +48,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-	
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
