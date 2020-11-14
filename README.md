@@ -10,7 +10,7 @@ Include the dependency
 Gradle
 
 ```
-implementation 'net.savantly.security:spring-role-permissions:0.0.1.RELEASE'
+implementation 'net.savantly.security:spring-role-permissions:0.0.2.RELEASE'
 ```
 
 Maven
@@ -19,7 +19,7 @@ Maven
 <dependency>
   <groupId>net.savantly.security</groupId>
   <artifactId>spring-role-permissions</artifactId>
-  <version>0.0.1.RELEASE</version>
+  <version>0.0.2.RELEASE</version>
 </dependency>
 ```
 
